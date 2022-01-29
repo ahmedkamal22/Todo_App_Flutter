@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:todo_app/modules/archived/archived_screen.dart';
 import 'package:todo_app/modules/done/done_screen.dart';
@@ -34,8 +38,16 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async
         {
-           var name = await getName();
-           print(name);
+          try
+          {
+            var name = await getName();
+            print(name);
+            print("adsasasdasd");
+            throw("error here");
+          }catch(error)
+          {
+            print("error in(${error.toString()})");
+          };
         },
         child: Icon(Icons.add),
       ),
