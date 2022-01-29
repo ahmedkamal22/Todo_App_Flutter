@@ -32,7 +32,11 @@ class _HomeState extends State<Home> {
       ),
       body: screens[current],
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () async
+        {
+           var name = await getName();
+           print(name);
+        },
         child: Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -60,5 +64,10 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+
+  Future<String> getName() async
+  {
+    return "Ahmed Kamal";
   }
 }
