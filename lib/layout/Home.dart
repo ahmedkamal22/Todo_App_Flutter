@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:todo_app/modules/archived/archived_screen.dart';
 import 'package:todo_app/modules/done/done_screen.dart';
 import 'package:todo_app/modules/tasks/task_screen.dart';
@@ -25,7 +27,11 @@ class _HomeState extends State<Home> {
     "Done",
     "Archived"
   ];
-
+  @override
+  void initState() {
+    super.initState();
+    createDatabase();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +84,30 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void createDatabase() async
+  {
+    var database =  await openDatabase(
+      "todo.db",
+      version: 1,
+      onCreate: (database,version) async
+        {
+          print("Database created successfully");
+          try
+          {
+            await database.execute("CREATE TABLE tasks(id INTEGER PRIMARY KEY,title TEXT,date TEXT,status TEXT,time TEXT)");
+            print("table created successfully");
+          }
+          catch(error)
+          {
+            print("error in: ${error.toString()}");
+          }
+        },
+        onOpen: (database)
+        {
+          print("database openend");
+        }
+    );
+  }
   Future<String> getName() async
   {
     return "Ahmed Kamal";
