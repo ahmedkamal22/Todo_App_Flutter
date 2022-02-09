@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,6 +13,7 @@ import 'package:todo_app/modules/archived/archived_screen.dart';
 import 'package:todo_app/modules/done/done_screen.dart';
 import 'package:todo_app/modules/tasks/task_screen.dart';
 import 'package:todo_app/shared/components/components.dart';
+import 'package:todo_app/shared/components/constants.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -48,7 +50,13 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text(titels[current]),
       ),
-      body: screens[current],
+      body: ConditionalBuilder(
+        builder: (context) => screens[current],
+        condition: tasks.length > 0,
+        fallback: (context) => Center(child: CircularProgressIndicator(
+          color: Colors.red,
+        )),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (isBottomSheetShown) {
@@ -58,10 +66,13 @@ class _HomeState extends State<Home> {
                 taskDate: dateController.text,
                 taskTime: timeController.text,
               ).then((value) {
-                Navigator.pop(context);
-                isBottomSheetShown = false;
-                setState(() {
-                  fabIcon = Icons.edit;
+                getDataFromDatabase(database).then((value) {
+                  Navigator.pop(context);
+                  setState(() {
+                    isBottomSheetShown = false;
+                    fabIcon = Icons.edit;
+                    tasks = value;
+                  });
                 });
               });
             }
@@ -192,6 +203,11 @@ class _HomeState extends State<Home> {
         print("error in database creating: ${error.toString()}");
       }
     }, onOpen: (database) {
+       getDataFromDatabase(database).then((value) {
+         setState(() {
+           tasks = value;
+         });
+       });
       print("database openend");
     });
   }
@@ -212,7 +228,10 @@ class _HomeState extends State<Home> {
       return null;
     });
   }
-
+  Future<List<Map>> getDataFromDatabase(database) async
+  {
+    return await database!.rawQuery("SELECT * FROM tasks");
+  }
   Future<String> getName() async {
     return "Ahmed Kamal";
   }

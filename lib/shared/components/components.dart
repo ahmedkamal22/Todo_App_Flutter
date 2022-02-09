@@ -31,3 +31,41 @@ Widget defaultFormField({
     ),
   ),
 );
+Widget buildTaskItem(Map task) => Padding(
+  padding: const EdgeInsets.all(20.0),
+  child: Row(
+    children: [
+      CircleAvatar(
+        radius: 40,
+        child: Text(
+          "${task["time"]}",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      SizedBox(width: 15.0,),
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${task["title"]}',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 20.0
+            ),
+          ),
+          SizedBox(height: 7.0,),
+          Text(
+            '${task["date"]}',
+            style: TextStyle(
+                color: Colors.grey
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+);
