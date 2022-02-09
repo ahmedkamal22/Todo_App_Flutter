@@ -65,7 +65,8 @@ class _HomeState extends State<Home> {
                 });
               });
             }
-          } else {
+          }
+          else {
             scaffoldKey.currentState?.showBottomSheet(
               (context) => Container(
                 color: Colors.white,
@@ -138,7 +139,12 @@ class _HomeState extends State<Home> {
                 ),
               ),
               elevation: 20.0,
-            );
+            ).closed.then((value) {
+              isBottomSheetShown = false;
+              setState(() {
+                fabIcon = Icons.edit;
+              });
+            } );
             isBottomSheetShown = true;
             setState(() {
               fabIcon = Icons.add;
