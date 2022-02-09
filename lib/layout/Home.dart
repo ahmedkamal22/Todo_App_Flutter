@@ -197,7 +197,7 @@ class _HomeState extends State<Home> {
     await database?.transaction((txn) {
       txn
           .rawInsert(
-              'INSERT INTO tasks(title,date,status,time) VALUES("First task","02/05/2022","new","05 pm")')
+              'INSERT INTO tasks(title,date,status,time) VALUES("$taskTitle","$taskDate","new","$taskTime")')
           .then((value) {
         print("$value inserted successfully");
       }).catchError((error) {
