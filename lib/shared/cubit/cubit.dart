@@ -18,7 +18,9 @@ class AppCubit extends Cubit<AppStates>
   ];
   List<String> titels = ["Tasks", "Done", "Archived"];
 
-  List<Map> tasks = [];
+  List<Map> newTasks = [];
+  List<Map> doneTasks = [];
+  List<Map> archivedTasks = [];
 
   Database? database;
   bool isBottomSheetShown = false;
@@ -50,10 +52,7 @@ class AppCubit extends Cubit<AppStates>
             print("error in database creating: ${error.toString()}");
           }
         }, onOpen: (database) {
-          getDataFromDatabase(database).then((value) {
-            tasks = value;
-            emit(AppGetDatabaseState());
-          });
+          getDataFromDatabase(database);
           print("database openend");
         },).then((value) {
           database = value;
@@ -72,10 +71,7 @@ class AppCubit extends Cubit<AppStates>
           .then((value) {
         print("$value inserted successfully");
         emit(AppInsertDatabaseState());
-        getDataFromDatabase(database).then((value) {
-          tasks = value;
-          emit(AppGetDatabaseState());
-        });
+        getDataFromDatabase(database);
       }).catchError((error) {
         print("error in database Inserting: ${error.toString()}");
       });
@@ -83,10 +79,39 @@ class AppCubit extends Cubit<AppStates>
     });
   }
 
-  Future<List<Map>> getDataFromDatabase(database) async
+  void getDataFromDatabase(database)
   {
+    newTasks = [];
+    doneTasks = [];
+    archivedTasks = [];
     emit(AppGetDatabaseLoadingState());
-    return await database!.rawQuery("SELECT * FROM tasks");
-  }
+    database!.rawQuery("SELECT * FROM tasks").then((value) {
+      value.forEach((element) {
+        if(element['status'] == 'new')
+          {
+            newTasks.add(element);
+          }
+        else if(element["status"] == "done")
+        {
+          doneTasks.add(element);
+        }
+        else
+          archivedTasks.add(element);
 
+      });
+      emit(AppGetDatabaseState());
+    });
+  }
+  void updateData({
+   @required String? status,
+    @required int? id,
+}) async
+  {
+    database!.rawUpdate(
+        'UPDATE tasks SET status = ? WHERE id = ?',
+        ['$status', id]).then((value) {
+          getDataFromDatabase(database);
+          emit(AppUpdateState());
+    });
+  }
 }
