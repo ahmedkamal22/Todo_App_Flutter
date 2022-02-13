@@ -218,7 +218,7 @@ class Home extends StatelessWidget {
       {@required String? taskTitle,
         @required String? taskDate,
         @required String? taskTime}) async {
-    await database?.transaction((txn) {
+    return await database?.transaction((txn) {
       txn
           .rawInsert(
           'INSERT INTO tasks(title,date,status,time) VALUES("$taskTitle","$taskDate","new","$taskTime")')
@@ -227,7 +227,7 @@ class Home extends StatelessWidget {
       }).catchError((error) {
         print("error in database Inserting: ${error.toString()}");
       });
-      return null;
+    throw("");
     });
   }
   Future<List<Map>> getDataFromDatabase(database) async
