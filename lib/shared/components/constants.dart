@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
 
-List<Map> tasks = [];
-
 class MyBlocObserver extends BlocObserver {
   @override
   void onCreate(BlocBase bloc) {
