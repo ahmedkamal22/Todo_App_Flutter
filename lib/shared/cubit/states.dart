@@ -10,6 +10,8 @@ class AppInsertDatabaseState extends AppStates{}
 
 class AppGetDatabaseState extends AppStates{}
 
+class AppUpdateState extends AppStates{}
+
 class AppGetDatabaseLoadingState extends AppStates{}
 
 class AppChangeBottomNavState extends AppStates{}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/shared/cubit/cubit.dart';
 
 Widget defaultFormField({
   @required TextInputType? keyboard_type,
@@ -31,7 +32,7 @@ Widget defaultFormField({
     ),
   ),
 );
-Widget buildTaskItem(Map task) => Padding(
+Widget buildTaskItem(Map task,context) => Padding(
   padding: const EdgeInsets.all(20.0),
   child: Row(
     children: [
@@ -45,27 +46,46 @@ Widget buildTaskItem(Map task) => Padding(
         ),
       ),
       SizedBox(width: 15.0,),
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${task["title"]}',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 20.0
+      Expanded(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${task["title"]}',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 20.0
+              ),
             ),
-          ),
-          SizedBox(height: 7.0,),
-          Text(
-            '${task["date"]}',
-            style: TextStyle(
-                color: Colors.grey
+            SizedBox(height: 7.0,),
+            Text(
+              '${task["date"]}',
+              style: TextStyle(
+                  color: Colors.grey
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+      SizedBox(width: 15.0,),
+      IconButton(onPressed: (){
+        AppCubit.get(context).updateData(
+            status: "done", id: task["id"]);
+      },
+          icon: Icon(
+              Icons.check_circle,
+              color: Colors.green,
+          )),
+      IconButton(onPressed: (){
+        AppCubit.get(context).updateData(
+            status: "archived", id: task["id"]);
+      },
+          icon: Icon(
+            Icons.archive,
+            color: Colors.black45,
+          )),
     ],
   ),
 );
