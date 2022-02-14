@@ -1,3 +1,4 @@
+import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/shared/components/components.dart';
@@ -13,18 +14,7 @@ class Tasks extends StatelessWidget {
        listener: (context,state){},
       builder: (context,state) {
          var tasks = AppCubit.get(context).newTasks;
-         return ListView.separated(itemBuilder: (context,index) => buildTaskItem(tasks[index],context),
-             separatorBuilder: (context,index) => Padding(
-               padding: const EdgeInsets.symmetric(
-                 horizontal: 20,
-               ),
-               child: Container(
-                 width: double.infinity,
-                 height: 1,
-                 color: Colors.blue[200],
-               ),
-             ),
-             itemCount: tasks.length);
+         return taskBuilder(tasks: tasks);
       },
     );
   }
