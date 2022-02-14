@@ -31,6 +31,7 @@ class AppCubit extends Cubit<AppStates>
     current = index;
     emit(ChangeBottomNavIndexState());
   }
+
   void changeBottomNavState({
   @required bool? isShown,
   @required IconData? icon,
@@ -40,6 +41,7 @@ class AppCubit extends Cubit<AppStates>
     fabIcon = icon!;
     emit(AppChangeBottomNavState());
   }
+
   void createDatabase() {
     openDatabase("todo.db", version: 1,
         onCreate: (database, version) async {
@@ -102,6 +104,7 @@ class AppCubit extends Cubit<AppStates>
       emit(AppGetDatabaseState());
     });
   }
+
   void updateData({
    @required String? status,
     @required int? id,
@@ -112,6 +115,16 @@ class AppCubit extends Cubit<AppStates>
         ['$status', id]).then((value) {
           getDataFromDatabase(database);
           emit(AppUpdateState());
+    });
+  }
+
+  void deleteData({
+    @required int? id,
+  }) async
+  {
+    database!.rawDelete('DELETE FROM tasks WHERE id = ?', [id]).then((value) {
+      getDataFromDatabase(database);
+      emit(AppDeleteState());
     });
   }
 }
